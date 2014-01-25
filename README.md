@@ -133,6 +133,36 @@ CREATE VIEW `route_list` AS
     ORDER BY route.id , stop_number;
 ```
 
+### Triggers
+```sql
+USE `route_db`;
+DROP trigger IF EXISTS `route_db`.`route_stop_trigger`;
+
+DELIMITER $$
+CREATE TRIGGER `route_stop_trigger` BEFORE INSERT ON route_stop
+for each row
+BEGIN
+
+        if (select type from route where route.id=new.route_id) <> (select type from stop where stop.id=new.stop_id) then
+                set @msg = "Wrong stop type on route";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+
+        if ((select max(stop_number) from route_stop where route_stop.route_id=new.route_id)<>new.stop_number-1) then
+                set @msg = "Wrong stop_number";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+
+        if ((select count(stop_number) from route_stop where route_stop.route_id=new.route_id)=0 and new.stop_number<>1) then
+                set @msg = "Wrong stop_number";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+END$$
+
+DELIMITER ;
+
+```
+
 ### Test data
 
 Создаем городские маршруты.
@@ -243,4 +273,6 @@ INSERT INTO `route_db`.`driver_shift` (`date`, `vehicle_id`, `driver_id`) VALUES
 
 COMMIT;
 ```
+
+
 
