@@ -121,5 +121,14 @@ ENGINE = InnoDB;
 
 ```sql
 CREATE VIEW `route_list` AS
-SELECT route.id, stop_number, name, route.type FROM route, route_stop, stop WHERE route_id=route.id AND stop_id=stop.id ORDER BY route.id, stop_number;
+    SELECT 
+        route.id, stop_number, name, route.type
+    FROM
+        route,
+        route_stop,
+        stop
+    WHERE
+        route_id = route.id
+            AND stop_id = stop.id
+    ORDER BY route.id , stop_number;
 ```
