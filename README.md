@@ -117,12 +117,12 @@ ENGINE = InnoDB;
 
 ### Views
 
-Маршруты. **id** - номер маршрута, **stop_number** - порядковый номер остановки на маршруте. **stop_id** - идентификатор остановки, **name** - название остановки.
+Маршруты. **id** - номер маршрута, **stop_number** - порядковый номер остановки на маршруте. **stop_id** - идентификатор остановки, **name** - название остановки, **type** - тип транспортного средства.
 
 ```sql
 CREATE VIEW `route_list` AS
     SELECT 
-        route.id, stop_number, name, route.type
+        route.id, stop_number, stop_id, name, route.type
     FROM
         route,
         route_stop,
