@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `route_db`.`route` (
 ENGINE = InnoDB;
 ```
 
-Остановки. **id**, **name** - название остановки, **address** - адрес остановки, **type** - тип остановки (*bus stop, tram stop etc*)
+Остановки. **id**, **name** - название остановки, **address** - адрес остановки, **type** - тип остановки (*bus stop, tram stop etc*).
 
 ```sql
 CREATE TABLE IF NOT EXISTS `route_db`.`stop` (
@@ -47,3 +47,70 @@ CREATE TABLE IF NOT EXISTS `route_db`.`route_stop` (
 ENGINE = InnoDB;
 ```
 
+Транспорт. **id**, **type** - тип транспорта (*bus, tram etc*), **route_id** - индификатор маршрута, **vehicle_park_id** индификатор депо.
+ 
+```sql
+CREATE TABLE IF NOT EXISTS `route_db`.`vehicle` (
+  `id` INT UNSIGNED NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `route_id` INT UNSIGNED NOT NULL,
+  `vehicle_park_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_vehicle_route_idx` (`route_id` ASC),
+  INDEX `fk_vehicle_vehicle_park1_idx` (`vehicle_park_id` ASC),
+  CONSTRAINT `fk_vehicle_route`
+    FOREIGN KEY (`route_id`)
+    REFERENCES `route_db`.`route` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_vehicle_vehicle_park1`
+    FOREIGN KEY (`vehicle_park_id`)
+    REFERENCES `route_db`.`vehicle_park` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+```
+
+Депо. **id**, **name** - название остановки, **address** - адрес остановки, **type** - тип остановки (*bus stop, tram stop etc*).
+
+```sql
+CREATE TABLE IF NOT EXISTS `route_db`.`vehicle_park` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `address` VARCHAR(45) NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+```
+
+Водители. **id**, **name** - имя водителя, **surname** - фамилия водителя**.
+
+```sql
+CREATE TABLE IF NOT EXISTS `route_db`.`driver` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `surname` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+```
+
+Водительские смены. **date** - дата смены, **vehicle_id** - индификатор транспортного средства, **driver_id** индификатор водителя.
+
+```sql
+CREATE TABLE IF NOT EXISTS `route_db`.`driver_shift` (
+  `date` DATETIME NOT NULL,
+  `vehicle_id` INT UNSIGNED NOT NULL,
+  `driver_id` INT NOT NULL,
+  INDEX `fk_driver_shift_driver1_idx` (`driver_id` ASC),
+  CONSTRAINT `fk_driver_shift_vehicle1`
+    FOREIGN KEY (`vehicle_id`)
+    REFERENCES `route_db`.`vehicle` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_driver_shift_driver1`
+    FOREIGN KEY (`driver_id`)
+    REFERENCES `route_db`.`driver` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+```
