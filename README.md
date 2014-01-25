@@ -189,6 +189,20 @@ END$$
 DELIMITER ;
 ```
 
+### Indexes
+
+Для быстрого поиска по ФИО водителя:
+
+```sql
+create index drivers_name on driver (surname, name);
+```
+
+Для быстрого поиска по названию отсановки:
+
+```sql
+create index stop_name on stop (name);
+```
+
 ### Test data
 
 Создаем городские маршруты.
