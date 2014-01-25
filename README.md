@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `route_db`.`vehicle_park` (
 ENGINE = InnoDB;
 ```
 
-Водители. **id**, **name** - имя водителя, **surname** - фамилия водителя**.
+Водители. **id**, **name** - имя водителя, **surname** - фамилия водителя.
 
 ```sql
 CREATE TABLE IF NOT EXISTS `route_db`.`driver` (
