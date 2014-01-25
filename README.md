@@ -1,6 +1,6 @@
 ## route_db, база маршрутов городского транспорта.
 
-### Таблицы
+### Tables
 
 Маршрут. **id**, и **type** (*bus, tram etc*).
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `route_db`.`stop` (
 ENGINE = InnoDB;
 ```
 
-Остановки маршрута. **stop_number** - порядковый номер остановки в маршруте, **route_id** - индификатор маршрута, **stop_id** индификатор остановки.
+Остановки маршрута. **stop_number** - порядковый номер остановки в маршруте, **route_id** - идентификатор маршрута, **stop_id** идентификатор остановки.
 
 ```sql
 CREATE TABLE IF NOT EXISTS `route_db`.`route_stop` (
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `route_db`.`route_stop` (
 ENGINE = InnoDB;
 ```
 
-Транспорт. **id**, **type** - тип транспорта (*bus, tram etc*), **route_id** - индификатор маршрута, **vehicle_park_id** индификатор депо.
+Транспорт. **id**, **type** - тип транспорта (*bus, tram etc*), **route_id** - идентификатор маршрута, **vehicle_park_id** идентификатор депо.
  
 ```sql
 CREATE TABLE IF NOT EXISTS `route_db`.`vehicle` (
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `route_db`.`driver` (
 ENGINE = InnoDB;
 ```
 
-Водительские смены. **date** - дата смены, **vehicle_id** - индификатор транспортного средства, **driver_id** индификатор водителя.
+Водительские смены. **date** - дата смены, **vehicle_id** - идентификатор транспортного средства, **driver_id** идентификатор водителя.
 
 ```sql
 CREATE TABLE IF NOT EXISTS `route_db`.`driver_shift` (
@@ -113,4 +113,13 @@ CREATE TABLE IF NOT EXISTS `route_db`.`driver_shift` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+```
+
+### Views
+
+Маршруты. **route_id** - номер маршрута, **stop_number** - порядковый номер остановки на маршруте. **stop_id** - идентификатор остановки, **name** - название остановки.
+
+```sql
+CREATE VIEW `route_list` AS
+SELECT route.id, stop_number, name, route.type FROM route, route_stop, stop WHERE route_id=route.id AND stop_id=stop.id ORDER BY route.id, stop_number;
 ```
