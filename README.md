@@ -203,6 +203,14 @@ create index drivers_name on driver (surname, name);
 create index stop_name on stop (name);
 ```
 
+### Selects
+
+Запрос, находящий все маршруты из A в B.
+
+```sql
+select distinct id from route_list where id in (select id from route_list where stop_id=4) and stop_id=3;
+```
+
 ### Test data
 
 Создаем городские маршруты.
