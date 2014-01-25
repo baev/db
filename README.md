@@ -169,6 +169,26 @@ DELIMITER ;
 
 ```
 
+Проверяет, что тип транспортного средства соответсвует типу депо и типу маршрута.
+
+```sql
+DROP trigger IF EXISTS `route_db`.`route_stop_trigger`;
+
+DELIMITER $$
+CREATE TRIGGER `vehicle_trigger` BEFORE INSERT ON vehicle
+for each row
+BEGIN
+
+        if ((select type from route where route.id=new.route_id) <> new.type)
+        	or ((select type from vehicle_park where vehicle_park.id=new.vehicle_park_id) <> new.type) then
+                set @msg = "Wrong type of vehicle";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+END$$
+
+DELIMITER ;
+```
+
 ### Test data
 
 Создаем городские маршруты.
